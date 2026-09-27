@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery Framework – Easy Notes</title>
+
+<!-- This one line adds jQuery to the page -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+  :root {
+    --bg: #eef1f7;
+    --card: #ffffff;
+    --ink: #1c2233;
+    --muted: #5a6275;
+    --accent: #0769ad;          /* jQuery blue */
+    --theory-bg: #f3f7fc;
+    --code-bg: #1f2a3c;
+    --code-ink: #e5edf8;
+    --demo-bg: #fffbea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header { padding: 28px 20px 8px; max-width: 900px; margin: auto; }
+  h1 { margin: 0 0 4px; font-size: 1.8rem; }
+  header p { margin: 0; color: var(--muted); }
+
+  main { max-width: 900px; margin: auto; padding: 12px 20px 40px; }
+
+  .concept {
+    background: var(--card);
+    border-left: 6px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 18px 0;
+  }
+  .concept h2 { margin: 0 0 10px; font-size: 1.3rem; }
+
+  .theory {
+    background: var(--theory-bg);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 0 0 14px;
+    font-size: 1.02rem;
+  }
+  .theory p { margin: 0 0 8px; }
+  .theory p:last-child { margin-bottom: 0; }
+  .theory .example { color: var(--muted); }
+  .theory code {
+    background: #e2eaf5;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+
+  h3 { margin: 14px 0 6px; font-size: 1rem; color: var(--accent); }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  .run {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .run:hover { filter: brightness(1.1); }
+  button:focus-visible, input:focus-visible { outline: 3px solid #f2b705; outline-offset: 2px; }
+
+  /* The "Try it" area where jQuery does its work */
+  .demo {
+    background: var(--demo-bg);
+    border: 2px dashed #e0c65c;
+    border-radius: 6px;
+    padding: 14px;
+    min-height: 60px;
+  }
+  .demo button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+  }
+  .demo input { padding: 6px 8px; border-radius: 5px; border: 1px solid #999; }
+  .box {
+    width: 120px;
+    height: 60px;
+    background: #4a9fd8;
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .highlight { background: #ffd54f; color: #000; padding: 2px 6px; border-radius: 4px; }
+  .msg { font-family: Consolas, monospace; color: #1f6f3a; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>jQuery Framework 💙</h1>
+  <p>Read the theory, look at the code, press Run, and watch the yellow "Try it" box change.</p>
+</header>
+
+<main id="list"></main>
+
+<script>
+// 1. WHAT IS JQUERY
+function whatIsJquery() {
+  // $( ) is the jQuery function. It finds an element on the page.
+  // "#hello" means: find the element with id="hello"
+  // .text("...") is a jQuery method. It changes the text inside.
+  $("#hello").text("Hello! jQuery changed this text 🎉");
+}
+
+
+// 2. SELECTORS
+function selectors() {
+  // "#first" -> # means id. Finds the ONE element with id="first"
+  // .css("color", "red") -> changes its text color to red
+  $("#first").css("color", "red");
+
+  // ".fruit" -> . (dot) means class. Finds ALL elements with class="fruit"
+  $(".fruit").css("background", "yellow");
+
+  // "#demo-selectors b" -> finds all <b> tags inside #demo-selectors
+  $("#demo-selectors b").css("font-size", "22px");
+}
+
+
+// 3. EVENTS
+function events() {
+  // .off("click") removes any old click action
+  // (so clicking Run many times doesn't add many actions)
+  $("#hiBtn").off("click");
+
+  // .click( function(){ ... } ) means:
+  // "when this button is clicked, run the code inside { }"
+  $("#hiBtn").click(function () {
+    $("#hiMsg").text("You clicked the button! 👋");
+  });
+
+  $("#hiMsg").text("Now click the 'Say Hi' button above.");
+}
+
+
+// 4. HIDE, SHOW AND TOGGLE
+function hideShow() {
+  // .hide(1000) -> hides the box slowly
+  // 1000 = time in milliseconds (1000 ms = 1 second)
+  $("#box1").hide(1000);
+
+  // .show(1000) -> shows the box again slowly
+  $("#box1").show(1000);
+}
+
+function toggleDemo() {
+  // .toggle() -> if visible, hide it. If hidden, show it.
+  $("#box2").toggle(500);
+}
+
+
+// 5. FADE AND SLIDE
+function fadeSlide() {
+  // .fadeOut() -> slowly becomes invisible
+  // .fadeIn()  -> slowly becomes visible
+  $("#box3").fadeOut(800).fadeIn(800);
+
+  // .slideUp()   -> rolls up and hides
+  // .slideDown() -> rolls down and shows
+  $("#box4").slideUp(800).slideDown(800);
+}
+
+
+// 6. GET AND SET CONTENT
+function getSetContent() {
+  // .val() with empty brackets -> GETS what the user typed in the input
+  // "let name" stores that value in a variable called name
+  let name = $("#nameInput").val();
+
+  // .text("...") with something inside -> SETS the text
+  $("#greet").text("Welcome, " + name + "!");
+
+  // .html("...") -> SETS content WITH HTML tags (here <b> for bold)
+  $("#bold").html("<b>This is bold using html()</b>");
+}
+
+
+// 7. CSS AND CLASSES
+function cssClasses() {
+  // .css("property", "value") -> changes one style
+  $("#styleMe").css("border", "3px solid green");
+
+  // .toggleClass("highlight") -> adds the class "highlight"
+  // Run again -> removes it
+  $("#styleMe").toggleClass("highlight");
+}
+
+
+// 8. ADD AND REMOVE ELEMENTS
+function addElement() {
+  // .append("...") -> adds new HTML at the END inside #myList
+  // <li> = one list item
+  $("#myList").append("<li>New item ✅</li>");
+}
+
+function removeElement() {
+  // "#myList li" -> all <li> items inside #myList
+  // .last()      -> pick only the last one
+  // .remove()    -> delete it from the page
+  $("#myList li").last().remove();
+}
+
+
+// 9. ANIMATE
+function animateDemo() {
+  // .animate({ style: value }, time)
+  // { width: "300px" } -> the style we want to change
+  // 1000 -> how long it takes (1 second)
+  $("#box5").animate({ width: "300px" }, 1000);   // grow wider
+  $("#box5").animate({ width: "120px" }, 1000);   // back to normal
+}
+
+
+// 10. CHAINING
+function chaining() {
+  // Select the box ONCE, then add many actions with dots.
+  // They run one after another, from top to bottom.
+  $("#box6")
+    .css("background", "purple")   // 1. change color
+    .slideUp(600)                  // 2. roll up
+    .slideDown(600);               // 3. roll down
+}
+
+
+// ----------------------------------------------------------
+// PAGE SETUP (you don't need to study this part)
+// ----------------------------------------------------------
+const concepts = [
+  {
+    title: "1. What is jQuery?",
+    theory: [
+      "jQuery is a <b>JavaScript library</b>. It helps us write <b>less code</b> to do more work.",
+      "The <b>$</b> sign means jQuery.",
+      "The basic rule is: <code>$(\"find this\").doThis()</code>"
+    ],
+    example: "Plain JS: document.getElementById(\"hello\").textContent = \"Hi\"  →  jQuery: $(\"#hello\").text(\"Hi\")",
+    demo: `<h3 id="hello" style="margin:0">I am normal text.</h3>`,
+    fns: [whatIsJquery]
+  },
+  {
+    title: "2. Selectors",
+    theory: [
+      "A <b>selector</b> tells jQuery <b>which element</b> to work on.",
+      "<code>#name</code> → finds by <b>id</b> (only one element).",
+      "<code>.name</code> → finds by <b>class</b> (can be many elements).",
+      "<code>p</code>, <code>b</code>, <code>h1</code> → finds by <b>tag</b>."
+    ],
+    example: "Like calling students: by roll number (#id), by group (.class), or \"everyone\" (tag).",
+    demo: `<div id="demo-selectors">
+             <p id="first">I have an id: first</p>
+             <p><span class="fruit">Apple</span> and <span class="fruit">Mango</span> have class: fruit</p>
+             <p>These are <b>b</b> <b>tags</b></p>
+           </div>`,
+    fns: [selectors]
+  },
+  {
+    title: "3. Events",
+    theory: [
+      "An <b>event</b> is something the user does, like a <b>click</b>.",
+      "We tell jQuery: <b>when this happens, do that</b>."
+    ],
+    example: "Like a doorbell: press it (event) → it rings (action).",
+    demo: `<button id="hiBtn">Say Hi</button>
+           <p id="hiMsg" class="msg">Press Run first, then click Say Hi.</p>`,
+    fns: [events]
+  },
+  {
+    title: "4. Hide, Show and Toggle",
+    theory: [
+      "<code>hide()</code> → makes it <b>disappear</b>.",
+      "<code>show()</code> → makes it <b>appear</b>.",
+      "<code>toggle()</code> → <b>switches</b> between the two."
+    ],
+    example: "toggle() is like a light switch: press once ON, press again OFF.",
+    demo: `<div style="display:flex; gap:20px; flex-wrap:wrap">
+             <div id="box1" class="box">Box 1</div>
+             <div id="box2" class="box">Box 2</div>
+           </div>`,
+    fns: [hideShow, toggleDemo],
+    labels: ["▶ Run hide & show (Box 1)", "▶ Run toggle (Box 2)"]
+  },
+  {
+    title: "5. Fade and Slide",
+    theory: [
+      "<b>Fade</b> → slowly disappears or appears.",
+      "<b>Slide</b> → rolls up or rolls down.",
+      "These make the page look <b>smooth</b>."
+    ],
+    example: "Fade is like a movie scene going dark. Slide is like a shop shutter.",
+    demo: `<div style="display:flex; gap:20px; flex-wrap:wrap">
+             <div id="box3" class="box">Fade</div>
+             <div id="box4" class="box">Slide</div>
+           </div>`,
+    fns: [fadeSlide]
+  },
+  {
+    title: "6. Get and Set Content",
+    theory: [
+      "<b>Get</b> = read what is inside. <b>Set</b> = change what is inside.",
+      "<code>text()</code> → plain text. <code>html()</code> → text with tags. <code>val()</code> → input box value.",
+      "Empty brackets → <b>get</b>. Something inside → <b>set</b>."
+    ],
+    example: "val() reads what you typed. text(\"Hi\") writes \"Hi\" on the page.",
+    demo: `<input id="nameInput" placeholder="Type your name" value="Ravi">
+           <p id="greet" class="msg">Greeting will appear here</p>
+           <p id="bold">This will become bold</p>`,
+    fns: [getSetContent]
+  },
+  {
+    title: "7. CSS and Classes",
+    theory: [
+      "<code>css()</code> → changes <b>one style</b> (like color or border).",
+      "<code>toggleClass()</code> → adds or removes a <b>whole set of styles</b> at once."
+    ],
+    example: "css() = changing only your shirt. toggleClass() = changing into a full uniform.",
+    demo: `<p>Change <span id="styleMe">this text</span> using jQuery.</p>`,
+    fns: [cssClasses]
+  },
+  {
+    title: "8. Add and Remove Elements",
+    theory: [
+      "<code>append()</code> → <b>adds</b> something new at the end.",
+      "<code>remove()</code> → <b>deletes</b> an element from the page."
+    ],
+    example: "Like a shopping list: write a new item at the bottom, or cross one out.",
+    demo: `<ul id="myList" style="margin:0">
+             <li>Item 1</li>
+             <li>Item 2</li>
+           </ul>`,
+    fns: [addElement, removeElement],
+    labels: ["▶ Run append()", "▶ Run remove()"]
+  },
+  {
+    title: "9. Animate",
+    theory: [
+      "<code>animate()</code> → makes <b>your own animation</b>.",
+      "You tell it <b>what to change</b> (like width) and <b>how long</b> it takes."
+    ],
+    example: "Like stretching a rubber band and letting it come back.",
+    demo: `<div id="box5" class="box">Grow</div>`,
+    fns: [animateDemo]
+  },
+  {
+    title: "10. Chaining",
+    theory: [
+      "<b>Chaining</b> = doing <b>many actions</b> on the same element, joined with dots.",
+      "Select once, then keep adding actions. <b>Less code!</b>"
+    ],
+    example: "\"Go to shop, buy milk, come back\" said as one sentence.",
+    demo: `<div id="box6" class="box">Chain</div>`,
+    fns: [chaining]
+  }
+];
+
+const list = document.getElementById("list");
+
+concepts.forEach(c => {
+  const card = document.createElement("section");
+  card.className = "concept";
+
+  const paras = c.theory.map(t => `<p>${t}</p>`).join("");
+  const code = c.fns.map(f => f.toString()).join("\n\n");
+
+  card.innerHTML = `
+    <h2>${c.title}</h2>
+    <div class="theory">
+      ${paras}
+      <p class="example">💡 ${c.example}</p>
+    </div>
+    <h3>Code</h3>
+    <pre></pre>
+    <div class="buttons" style="display:flex; gap:10px; flex-wrap:wrap"></div>
+    <h3>Try it 👇</h3>
+    <div class="demo">${c.demo}</div>
+  `;
+  card.querySelector("pre").textContent = code;
+
+  const btnArea = card.querySelector(".buttons");
+  c.fns.forEach((f, i) => {
+    const btn = document.createElement("button");
+    btn.className = "run";
+    btn.textContent = c.labels ? c.labels[i] : "▶ Run this example";
+    btn.addEventListener("click", f);
+    btnArea.appendChild(btn);
+  });
+
+  list.appendChild(card);
+});
+</script>
+
+</body>
+</html>
