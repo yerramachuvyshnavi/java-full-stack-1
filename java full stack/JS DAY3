@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jQuery Events – Easy Notes</title>
+
+<!-- This one line adds jQuery to the page -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+  :root {
+    --bg: #eef1f7;
+    --card: #ffffff;
+    --ink: #1c2233;
+    --muted: #5a6275;
+    --accent: #0769ad;          /* jQuery blue */
+    --theory-bg: #f3f7fc;
+    --code-bg: #1f2a3c;
+    --code-ink: #e5edf8;
+    --demo-bg: #fffbea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header { padding: 28px 20px 8px; max-width: 900px; margin: auto; }
+  h1 { margin: 0 0 4px; font-size: 1.8rem; }
+  header p { margin: 0; color: var(--muted); }
+
+  main { max-width: 900px; margin: auto; padding: 12px 20px 40px; }
+
+  .concept {
+    background: var(--card);
+    border-left: 6px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 18px 0;
+  }
+  .concept h2 { margin: 0 0 10px; font-size: 1.3rem; }
+
+  .theory {
+    background: var(--theory-bg);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 0 0 14px;
+    font-size: 1.02rem;
+  }
+  .theory p { margin: 0 0 8px; }
+  .theory p:last-child { margin-bottom: 0; }
+  .theory .example { color: var(--muted); }
+  .theory code {
+    background: #e2eaf5;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+
+  h3 { margin: 14px 0 6px; font-size: 1rem; color: var(--accent); }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  .run {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  .run:hover { filter: brightness(1.1); }
+  button:focus-visible, input:focus-visible { outline: 3px solid #f2b705; outline-offset: 2px; }
+
+  /* The "Try it" area where jQuery does its work */
+  .demo {
+    background: var(--demo-bg);
+    border: 2px dashed #e0c65c;
+    border-radius: 6px;
+    padding: 14px;
+    min-height: 60px;
+  }
+  .demo button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    background: #fff;
+    cursor: pointer;
+  }
+  .demo input { padding: 6px 8px; border-radius: 5px; border: 1px solid #999; }
+  .box {
+    width: 120px;
+    height: 60px;
+    background: #4a9fd8;
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .highlight { background: #ffd54f; color: #000; padding: 2px 6px; border-radius: 4px; }
+  .msg { font-family: Consolas, monospace; color: #1f6f3a; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>jQuery Events 🖱️</h1>
+  <p>Read the theory, look at the code, press Run, then do the action in the yellow "Try it" box.</p>
+</header>
+
+<main id="list"></main>
+
+<script>
+// 1. DOCUMENT READY
+function readyDemo() {
+  // $(document) -> the whole web page
+  // .ready( function(){ ... } ) -> run the code inside { }
+  // ONLY after the page has fully loaded
+  $(document).ready(function () {
+    $("#readyMsg").text("Page is loaded. Now jQuery code can run ✅");
+  });
+}
+
+
+// 2. CLICK
+function clickDemo() {
+  // .off("click") removes old actions (so Run can be pressed many times safely)
+  $("#clickBtn").off("click");
+
+  // .click( function(){ ... } ) -> runs when the button is clicked ONCE
+  $("#clickBtn").click(function () {
+    $("#clickMsg").text("You clicked! 👆");
+  });
+
+  $("#clickMsg").text("Ready! Now click the button.");
+}
+
+
+// 3. DOUBLE CLICK
+function dblclickDemo() {
+  $("#dblBox").off("dblclick");
+
+  // .dblclick() -> runs only when clicked TWO times quickly
+  $("#dblBox").dblclick(function () {
+    $("#dblBox").text("Double clicked! ✌️");
+  });
+
+  $("#dblBox").text("Now double-click me");
+}
+
+
+// 4. MOUSE ENTER AND MOUSE LEAVE
+function mouseDemo() {
+  $("#mouseBox").off("mouseenter mouseleave");
+
+  // .mouseenter() -> runs when the mouse pointer comes ON the box
+  $("#mouseBox").mouseenter(function () {
+    $("#mouseBox").css("background", "orange").text("Mouse IN 🐭");
+  });
+
+  // .mouseleave() -> runs when the mouse pointer goes OUT of the box
+  $("#mouseBox").mouseleave(function () {
+    $("#mouseBox").css("background", "#4a9fd8").text("Mouse OUT");
+  });
+
+  $("#mouseBox").text("Move mouse here");
+}
+
+
+// 5. HOVER
+function hoverDemo() {
+  $("#hoverBox").off("mouseenter mouseleave");
+
+  // .hover( function 1, function 2 )
+  // function 1 -> runs when mouse comes IN
+  // function 2 -> runs when mouse goes OUT
+  $("#hoverBox").hover(
+    function () { $("#hoverBox").css("background", "green"); },
+    function () { $("#hoverBox").css("background", "#4a9fd8"); }
+  );
+
+  $("#hoverBox").text("Hover me");
+}
+
+
+// 6. KEYUP (TYPING)
+function keyupDemo() {
+  $("#typeInput").off("keyup");
+
+  // .keyup() -> runs every time a key is released while typing
+  $("#typeInput").keyup(function () {
+    // .val() -> gets what is typed in the input box
+    let typed = $("#typeInput").val();
+    $("#typeMsg").text("You typed: " + typed);
+  });
+
+  $("#typeMsg").text("Now type in the box.");
+}
+
+
+// 7. FOCUS AND BLUR
+function focusBlurDemo() {
+  $("#focusInput").off("focus blur");
+
+  // .focus() -> runs when you click INSIDE the input box
+  $("#focusInput").focus(function () {
+    $("#focusInput").css("background", "#fff3b0");
+    $("#focusMsg").text("You are inside the box ✏️");
+  });
+
+  // .blur() -> runs when you click OUTSIDE (leave the box)
+  $("#focusInput").blur(function () {
+    $("#focusInput").css("background", "white");
+    $("#focusMsg").text("You left the box 👋");
+  });
+
+  $("#focusMsg").text("Now click inside the box, then outside.");
+}
+
+
+// 8. CHANGE
+function changeDemo() {
+  $("#citySelect").off("change");
+
+  // .change() -> runs when the selected value is changed
+  $("#citySelect").change(function () {
+    let city = $("#citySelect").val();   // get the chosen option
+    $("#changeMsg").text("You chose: " + city);
+  });
+
+  $("#changeMsg").text("Now pick a city.");
+}
+
+
+// 9. SUBMIT
+function submitDemo() {
+  $("#myForm").off("submit");
+
+  // .submit() -> runs when the form is submitted
+  // "e" is the event object (details about the event)
+  $("#myForm").submit(function (e) {
+    // e.preventDefault() -> STOPS the page from reloading
+    e.preventDefault();
+
+    let name = $("#formName").val();
+    $("#submitMsg").text("Form sent! Hello " + name + " 📨");
+  });
+
+  $("#submitMsg").text("Now type a name and press Send.");
+}
+
+
+// 10. ON() - MANY EVENTS AT ONCE
+function onDemo() {
+  $("#onBox").off();   // .off() with nothing -> remove ALL events
+
+  // .on("event", function) -> the modern way to add ANY event
+  $("#onBox").on("click", function () {
+    $("#onMsg").text("click happened");
+  });
+
+  $("#onBox").on("dblclick", function () {
+    $("#onMsg").text("dblclick happened");
+  });
+
+  $("#onBox").on("mouseleave", function () {
+    $("#onMsg").text("mouseleave happened");
+  });
+
+  $("#onMsg").text("Now click, double-click, or leave the box.");
+}
+
+
+// 11. EVENT OBJECT
+function eventObjectDemo() {
+  $("#objBox").off("click");
+
+  // "e" = event object. jQuery gives it to us automatically.
+  $("#objBox").click(function (e) {
+    // e.type  -> name of the event
+    // e.pageX -> mouse position from the left
+    // e.pageY -> mouse position from the top
+    $("#objMsg").text(
+      "Event: " + e.type + " | X: " + e.pageX + " | Y: " + e.pageY
+    );
+  });
+
+  $("#objMsg").text("Now click anywhere on the box.");
+}
+
+
+// 12. OFF() - REMOVE AN EVENT
+function addOffEvent() {
+  $("#offBtn").off("click");
+  $("#offBtn").click(function () {
+    $("#offMsg").text("Button is working ✅");
+  });
+  $("#offMsg").text("Event added. Click the button.");
+}
+
+function removeOffEvent() {
+  // .off("click") -> removes the click event
+  // Now clicking the button does NOTHING
+  $("#offBtn").off("click");
+  $("#offMsg").text("Event removed. Click the button now, nothing happens ❌");
+}
+
+
+// ----------------------------------------------------------
+// PAGE SETUP (you don't need to study this part)
+// ----------------------------------------------------------
+const concepts = [
+  {
+    title: "1. What is an Event? + ready()",
+    theory: [
+      "An <b>event</b> is something the user does on the page.",
+      "Examples: <b>click</b>, <b>typing</b>, <b>moving the mouse</b>, <b>sending a form</b>.",
+      "<code>$(document).ready()</code> → wait for the page to load, then run the code."
+    ],
+    example: "Like a teacher waiting for all students to sit before starting class.",
+    demo: `<p id="readyMsg" class="msg">Press Run.</p>`,
+    fns: [readyDemo]
+  },
+  {
+    title: "2. click()",
+    theory: [
+      "<code>click()</code> → runs when the element is <b>clicked once</b>.",
+      "This is the <b>most used</b> event."
+    ],
+    example: "Pressing a lift button.",
+    demo: `<button id="clickBtn">Click me</button>
+           <p id="clickMsg" class="msg">Press Run first.</p>`,
+    fns: [clickDemo]
+  },
+  {
+    title: "3. dblclick()",
+    theory: [
+      "<code>dblclick()</code> → runs when clicked <b>two times quickly</b>."
+    ],
+    example: "Double-clicking a folder to open it.",
+    demo: `<div id="dblBox" class="box" style="width:200px">Press Run first</div>`,
+    fns: [dblclickDemo]
+  },
+  {
+    title: "4. mouseenter() and mouseleave()",
+    theory: [
+      "<code>mouseenter()</code> → mouse comes <b>onto</b> the element.",
+      "<code>mouseleave()</code> → mouse goes <b>away</b> from the element."
+    ],
+    example: "Automatic door: opens when you come near, closes when you leave.",
+    demo: `<div id="mouseBox" class="box" style="width:200px">Press Run first</div>`,
+    fns: [mouseDemo]
+  },
+  {
+    title: "5. hover()",
+    theory: [
+      "<code>hover()</code> = mouseenter + mouseleave in <b>one method</b>.",
+      "It takes <b>2 functions</b>: first for IN, second for OUT."
+    ],
+    example: "A button that changes color when your mouse is on it.",
+    demo: `<div id="hoverBox" class="box" style="width:200px">Press Run first</div>`,
+    fns: [hoverDemo]
+  },
+  {
+    title: "6. keyup() — typing",
+    theory: [
+      "<code>keyup()</code> → runs when you <b>release a key</b> while typing.",
+      "Useful for <b>live search</b> or <b>live preview</b>."
+    ],
+    example: "Google showing suggestions as you type.",
+    demo: `<input id="typeInput" placeholder="Type here">
+           <p id="typeMsg" class="msg">Press Run first.</p>`,
+    fns: [keyupDemo]
+  },
+  {
+    title: "7. focus() and blur()",
+    theory: [
+      "<code>focus()</code> → you click <b>inside</b> an input box.",
+      "<code>blur()</code> → you <b>leave</b> the input box."
+    ],
+    example: "A form box that glows when you are typing in it.",
+    demo: `<input id="focusInput" placeholder="Click inside me">
+           <p id="focusMsg" class="msg">Press Run first.</p>`,
+    fns: [focusBlurDemo]
+  },
+  {
+    title: "8. change()",
+    theory: [
+      "<code>change()</code> → runs when a <b>value is changed</b>.",
+      "Used with <b>dropdowns</b>, <b>checkboxes</b> and <b>radio buttons</b>."
+    ],
+    example: "Picking your state in a form, then the city list updates.",
+    demo: `<select id="citySelect">
+             <option>Tirupati</option>
+             <option>Kadapa</option>
+             <option>Hyderabad</option>
+             <option>Bengaluru</option>
+           </select>
+           <p id="changeMsg" class="msg">Press Run first.</p>`,
+    fns: [changeDemo]
+  },
+  {
+    title: "9. submit()",
+    theory: [
+      "<code>submit()</code> → runs when a <b>form is sent</b>.",
+      "<code>e.preventDefault()</code> → stops the page from <b>reloading</b>."
+    ],
+    example: "Pressing \"Login\" on a website.",
+    demo: `<form id="myForm">
+             <input id="formName" placeholder="Your name">
+             <button type="submit">Send</button>
+           </form>
+           <p id="submitMsg" class="msg">Press Run first.</p>`,
+    fns: [submitDemo]
+  },
+  {
+    title: "10. on() — the modern way",
+    theory: [
+      "<code>on(\"event\", function)</code> → adds <b>any</b> event.",
+      "Same work as click(), hover() etc., but <b>one method for all</b>.",
+      "Most new jQuery code uses <b>on()</b>."
+    ],
+    example: "One universal remote instead of many remotes.",
+    demo: `<div id="onBox" class="box" style="width:200px">Try me</div>
+           <p id="onMsg" class="msg">Press Run first.</p>`,
+    fns: [onDemo]
+  },
+  {
+    title: "11. Event Object (e)",
+    theory: [
+      "When an event happens, jQuery gives us an <b>event object</b>, usually named <code>e</code>.",
+      "It has <b>details</b> about the event: what happened, where the mouse was, etc."
+    ],
+    example: "Like a CCTV record: what happened, and where.",
+    demo: `<div id="objBox" class="box" style="width:260px; height:100px">Click anywhere here</div>
+           <p id="objMsg" class="msg">Press Run first.</p>`,
+    fns: [eventObjectDemo]
+  },
+  {
+    title: "12. off() — remove an event",
+    theory: [
+      "<code>off()</code> → <b>removes</b> an event.",
+      "After that, the action <b>stops working</b>."
+    ],
+    example: "Unplugging a doorbell: pressing it does nothing now.",
+    demo: `<button id="offBtn">Test button</button>
+           <p id="offMsg" class="msg">Press the first Run button.</p>`,
+    fns: [addOffEvent, removeOffEvent],
+    labels: ["▶ Add event", "▶ Remove event with off()"]
+  }
+];
+
+const list = document.getElementById("list");
+
+concepts.forEach(c => {
+  const card = document.createElement("section");
+  card.className = "concept";
+
+  const paras = c.theory.map(t => `<p>${t}</p>`).join("");
+  const code = c.fns.map(f => f.toString()).join("\n\n");
+
+  card.innerHTML = `
+    <h2>${c.title}</h2>
+    <div class="theory">
+      ${paras}
+      <p class="example">💡 ${c.example}</p>
+    </div>
+    <h3>Code</h3>
+    <pre></pre>
+    <div class="buttons" style="display:flex; gap:10px; flex-wrap:wrap"></div>
+    <h3>Try it 👇</h3>
+    <div class="demo">${c.demo}</div>
+  `;
+  card.querySelector("pre").textContent = code;
+
+  const btnArea = card.querySelector(".buttons");
+  c.fns.forEach((f, i) => {
+    const btn = document.createElement("button");
+    btn.className = "run";
+    btn.textContent = c.labels ? c.labels[i] : "▶ Run this example";
+    btn.addEventListener("click", f);
+    btnArea.appendChild(btn);
+  });
+
+  list.appendChild(card);
+});
+</script>
+
+</body>
+</html>
